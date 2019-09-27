@@ -11,11 +11,54 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(readxl)
+library(dplyr)
+```
+
+#import data sheet Mr. Trash Wheel
+```{r}
+MrTrashWheel_data = read_excel( "./HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet= "Mr. Trash Wheel", range = cell_cols("A:N"))%>%
+ janitor::clean_names()%>%
+drop_na(dumpster)%>%
+  mutate(sports_balls=as.integer(round(sports_balls)))
+```
+
+# import datasheet Rain_2017 and Rain_2018
+```{r}
+Rain_2017 = read_excel( "./HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet= "2017 Precipitation", range = "A2:B14")%>%
+janitor::clean_names()%>%
+  drop_na(total)%>%
+  mutate(year=2017)
 ```
 
 ```{r}
-MrTrashWheel_data = read_excel( "./HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet= "Mr. Trash Wheel", range = cell_cols("A:N"))
+Rain_2018 = read_excel( "./HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet= "2018 Precipitation",range = "A2:B14")%>%
+janitor::clean_names()%>%
+  drop_na(total)%>%
+  mutate(year=2018)
 ```
+
+#Using full_join to combine 2017-18 data and rename "month"
+```{r}
+Rain_Total=
+full_join(Rain_2017,Rain_2018, by=NULL)%>%
+mutate(month=month.name[month])
+```
+
+#Write a paragraph about these data; you are encouraged to use inline R. Be sure to note the number of observations in both resulting datasets, and give examples of key variables. For available data, what was the total precipitation in 2018? What was the median number of sports balls in a dumpster in 2017?
+#In dataset "MrTrashWheel_data", there are 14 columns with 285 observations. Key variables including "weight_tons" which shows the amount of garbage they were collected each day, "dumpster" represents the number of dumpsters collected.
+#In dataset "Rain_Total", there are 3 columns with 19 observations.Key variables including "total" which represents the amount of precipitation in that month.
+#Total precipitation in 2018 is 23.50 inches, the median number of sports balls in a dumpster in 2017 is `r median(MrTrashWheel_data$sports_balls, na.rm=FALSE)`.
+
+```{r}
+
+```
+
+
+
+
+
+
+
 
 
 
