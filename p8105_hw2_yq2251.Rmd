@@ -1,0 +1,23 @@
+---
+title: "p8105_hw2_yq2251"
+author: "TritonD"
+date: "9/27/2019"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(tidyverse)
+library(readxl)
+```
+
+```{r}
+MrTrashWheel_data = read_excel( "./HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet= "Mr. Trash Wheel", range = cell_cols("A:N"))
+```
+
+
+
+
+
