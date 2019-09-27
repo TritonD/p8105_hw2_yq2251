@@ -44,13 +44,21 @@ full_join(Rain_2017,Rain_2018, by=NULL)%>%
 mutate(month=month.name[month])
 ```
 
-#Write a paragraph about these data; you are encouraged to use inline R. Be sure to note the number of observations in both resulting datasets, and give examples of key variables. For available data, what was the total precipitation in 2018? What was the median number of sports balls in a dumpster in 2017?
 #In dataset "MrTrashWheel_data", there are 14 columns with 285 observations. Key variables including "weight_tons" which shows the amount of garbage they were collected each day, "dumpster" represents the number of dumpsters collected.
 #In dataset "Rain_Total", there are 3 columns with 19 observations.Key variables including "total" which represents the amount of precipitation in that month.
 #Total precipitation in 2018 is 23.50 inches, the median number of sports balls in a dumpster in 2017 is `r median(MrTrashWheel_data$sports_balls, na.rm=FALSE)`.
 
-```{r}
 
+#Question 2
+#use separate function to separate "mon"
+```{r}
+Pols = read_csv( "./pols-month.csv")%>%
+  separate(mon, into = c("year", "month","day"), sep = "-")%>%
+  mutate(month=as.integer(month),year=as.integer(year),day=as.integer(day))%>%
+  mutate(month=month.name[month])%>%
+  mutate(president= ifelse(prez_gop %in% 0, "dem",
+        ifelse(prez_gop %in%1, "gop","gop")))%>%
+  select(-prez_dem,-prez_gop,-day)
 ```
 
 
