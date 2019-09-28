@@ -50,7 +50,7 @@ mutate(month=month.name[month])
 
 
 #Question 2
-#use separate function to separate "mon"
+#use separate function to separate "mon" and create variable "president"
 ```{r}
 Pols = read_csv( "./pols-month.csv")%>%
   separate(mon, into = c("year", "month","day"), sep = "-")%>%
@@ -60,6 +60,46 @@ Pols = read_csv( "./pols-month.csv")%>%
         ifelse(prez_gop %in%1, "gop","gop")))%>%
   select(-prez_dem,-prez_gop,-day)
 ```
+```{r}
+snp=read_csv( "./snp.csv")%>%
+  separate(date, into = c("day", "month","year"), sep = "/")%>%
+  mutate(month=as.integer(month),year=as.integer(year),day=as.integer(day))%>%
+  mutate(month=month.name[month])%>%
+  select("year", everything())%>% 
+  select(-day)
+```
+#use dataset unemployment,change abbreviated month name to full
+```{r}
+unemploy=read_csv( "./unemployment.csv")%>%
+  rename(January=Jan, February=Feb, March=Mar, April=Apr,June=Jun,July=Jul,August=Aug,September=Sep,October=Oct,November=Nov, December=Dec)
+```
+
+```{r}
+unemploy_tidy=
+  pivot_longer(
+    unemploy, 
+    January:December,
+    names_to = "month", 
+    values_to = "unemployment_rate")
+```
+
+#join the datasets
+```{r}
+snp_pols=left_join(Pols,snp,by=NULL)
+```
+```{r}
+snp_pols_unemploy=left_join(snp_pols,unemploy_tidy, by=NULL)
+```
+#Dataset "snp" contains 787 observations in 3 columns presenting Standard & Poor’s stock market index (S&P) from March 1950-Jan 2015.
+
+#Dataset "Pols" has 822 observations of 9 variables presenting # of national politicians who are democratic or republican ranging from Jan1947-June 2015.
+
+#Dataset "unemploy_tidy" has 816 observations of 3 columns presenting the unemployment rate from Jan 1948-June 2015.Important variable include "president" and "close".
+
+#Dataset "snp_pols"has 1391 observations in 10 columns, which is a combination of dataset "snp" and "Pols".Important variable include "president", "close" and "unemployment_rate
+
+#Dataset "snp_pols_unemploy" has 94,588 observations with 12 columns, which is a combination of dataset "snp_pols" and "unemploy_tidy"
+
 
 
 
