@@ -177,6 +177,7 @@ WMNH2016N <- Names [ which(Names$Gender=="MALE"& Names$Ethnicity=="WHITE NON HIS
 WMNH_PLOT <-ggplot(WMNH2016N,aes(x=Count,y=Rank, label = `Child's First Name`))
 WMNH_PLOT + geom_point() + geom_text(data=subset(WMNH2016N, Rank<2))+ggtitle("Male Baby name ranking in White,non-Hispanic 2016")+theme(plot.title = element_text(hjust = 0.5))
 ```
+
 This is the scatter plot showing the number of children with a name against the rank in popularity of that name for male, white non-hispanic children born in 2016.With the name on the right bottom side the first rank name "Joseph" that largest amount of children are named with. As the children count decreases, the rank of the name increases(less popular).
 
 
