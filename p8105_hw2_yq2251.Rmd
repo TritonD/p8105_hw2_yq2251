@@ -14,26 +14,29 @@ library(readxl)
 library(dplyr)
 ```
 
+
 ## Question 1
-##import data sheet Mr. Trash Wheel
+## import data sheet Mr. Trash Wheel
 ```{r}
-MrTrashWheel_data = read_excel( "./HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet= "Mr. Trash Wheel", range = cell_cols("A:N"))%>%
+MrTrashWheel_data = read_excel( "./Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet= "Mr. Trash Wheel", range = cell_cols("A:N"))%>%
  janitor::clean_names()%>%
 drop_na(dumpster)%>%
   mutate(sports_balls=as.integer(round(sports_balls)))
 ```
 
 
-##import datasheet Rain_2017 and Rain_2018
+
+## import datasheet Rain_2017 and Rain_2018
 ```{r}
-Rain_2017 = read_excel( "./HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet= "2017 Precipitation", range = "A2:B14")%>%
+Rain_2017 = read_excel( "./Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet= "2017 Precipitation", range = "A2:B14")%>%
 janitor::clean_names()%>%
   drop_na(total)%>%
   mutate(year=2017)
 ```
 
+
 ```{r}
-Rain_2018 = read_excel( "./HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet= "2018 Precipitation",range = "A2:B14")%>%
+Rain_2018 = read_excel( "./Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet= "2018 Precipitation",range = "A2:B14")%>%
 janitor::clean_names()%>%
   drop_na(total)%>%
   mutate(year=2018)
@@ -41,21 +44,25 @@ janitor::clean_names()%>%
 
 
 
-##Using full_join to combine 2017-18 data and rename "month"
+## Using full_join to combine 2017-18 data and rename "month"
 ```{r}
 Rain_Total=
 full_join(Rain_2017,Rain_2018, by=NULL)%>%
 mutate(month=month.name[month])
 ```
 
-##In dataset "MrTrashWheel_data", there are 14 columns with 285 observations. Key variables including "weight_tons" which shows the amount of garbage they were collected each day, "dumpster" represents the number of dumpsters collected.
-#In dataset "Rain_Total", there are 3 columns with 19 observations.Key variables including "total" which represents the amount of precipitation in that month.
-#Total precipitation in 2018 is 23.50 inches, the median number of sports balls in a dumpster in 2017 is `r median(MrTrashWheel_data$sports_balls, na.rm=FALSE)`.
+
+In dataset "MrTrashWheel_data", there are 14 columns with 344 observations. Key variables including "weight_tons" which shows the amount of garbage they were collected each day, "dumpster" represents the number of dumpsters collected.
+In dataset "Rain_Total", there are 3 columns with 19 observations.Key variables including "total" which represents the amount of precipitation in that month.
+Total precipitation in 2018 is 23.50 inches, the median number of sports balls in a dumpster in 2017 is `r median(MrTrashWheel_data$sports_balls, na.rm=FALSE)`.
+
+
+
 
 
 
 ## Question 2
-##use separate function to separate "mon" and create variable "president"
+## use separate function to separate "mon" and create variable "president"
 ```{r}
 Pols = read_csv( "./pols-month.csv")%>%
   separate(mon, into = c("year", "month","day"), sep = "-")%>%
@@ -65,6 +72,7 @@ Pols = read_csv( "./pols-month.csv")%>%
         ifelse(prez_gop %in%1, "gop","gop")))%>%
   select(-prez_dem,-prez_gop,-day)
 ```
+
 ```{r}
 snp=read_csv( "./snp.csv")%>%
   separate(date, into = c("day", "month","year"), sep = "/")%>%
@@ -75,7 +83,7 @@ snp=read_csv( "./snp.csv")%>%
 ```
 
 
-##use dataset unemployment,change abbreviated month name to full
+## use dataset unemployment,change abbreviated month name to full
 ```{r}
 unemploy=read_csv( "./unemployment.csv")%>%
   rename(January=Jan, February=Feb, March=Mar, April=Apr,June=Jun,July=Jul,August=Aug,September=Sep,October=Oct,November=Nov, December=Dec)
@@ -92,27 +100,29 @@ unemploy_tidy=
 ```
 
 
-##join the datasets
+## join the datasets
 ```{r}
 snp_pols=left_join(Pols,snp,by=NULL)
 ```
 ```{r}
 snp_pols_unemploy=left_join(snp_pols,unemploy_tidy, by=NULL)
 ```
-##Dataset "snp" contains 787 observations in 3 columns presenting Standard & Poor’s stock market index (S&P) from March 1950-Jan 2015.
+Dataset "snp" contains 787 observations in 3 columns presenting Standard & Poor’s stock market index (S&P) from March 1950-Jan 2015.
 
-##Dataset "Pols" has 822 observations of 9 variables presenting # of national politicians who are democratic or republican ranging from Jan1947-June 2015.
+Dataset "Pols" has 822 observations of 9 variables presenting # of national politicians who are democratic or republican ranging from Jan1947-June 2015.
 
-##Dataset "unemploy_tidy" has 816 observations of 3 columns presenting the unemployment rate from Jan 1948-June 2015.Important variable include "president" and "close".
+Dataset "unemploy_tidy" has 816 observations of 3 columns presenting the unemployment rate from Jan 1948-June 2015.Important variable include "president" and "close".
 
-##Dataset "snp_pols"has 1391 observations in 10 columns, which is a combination of dataset "snp" and "Pols".Important variable include "president", "close" and "unemployment_rate.
+Dataset "snp_pols"has 1391 observations in 10 columns, which is a combination of dataset "snp" and "Pols".Important variable include "president", "close" and "unemployment_rate.
 
-##Dataset "snp_pols_unemploy" has 94,588 observations with 12 columns, which is a combination of dataset "snp_pols" and "unemploy_tidy".
+Dataset "snp_pols_unemploy" has 94,588 observations with 12 columns, which is a combination of dataset "snp_pols" and "unemploy_tidy".
+
+
 
 
 
 ## Question 3
-#read "Names" dataset and rename categorical names
+# read "Names" dataset and rename categorical names
 ```{r}
 Names= read_csv( "./Popular_Baby_Names.csv")
 
@@ -123,33 +133,33 @@ Names$Ethnicity[Names$Ethnicity == "WHITE NON HISP"]<-"WHITE NON HISPANIC"
 ```
 
 
-##change cases of names into all upper case
+## change cases of names into all upper case
 ```{r}
 Names$`Child's First Name`=toupper(Names$`Child's First Name`)
 ```
 
 
-##remove duplicated rows
+## remove duplicated rows
 ```{r}
 dplyr::distinct(Names,Ethnicity,Gender,`Child's First Name`,.keep_all= TRUE)
 ```
 
 
-##table showing the rank in popularity of the name “Olivia” as a female baby name over time
+## table showing the rank in popularity of the name “Olivia” as a female baby name over time
 ```{r}
 olivia_female=filter(Names,Gender=="FEMALE", `Child's First Name`=="OLIVIA")%>%
 select(-Count)
 ```
 
 
-##showing the most popular name among male children over time
+## showing the most popular name among male children over time
 ```{r}
 male=filter(Names, Gender=="MALE", Rank == 1 )%>%
   select(-Count)
 ```
 
 
-##remove any duplicated rows
+## remove any duplicated rows
 ```{r}
 Names <- droplevels(Names)
 Names <- unique(Names)
@@ -160,14 +170,14 @@ OMatrix
 ```
 
 
-##scatter plot 
+## scatter plot 
 ```{r}
 library(ggplot2)
 WMNH2016N <- Names [ which(Names$Gender=="MALE"& Names$Ethnicity=="WHITE NON HISPANIC" & Names$`Year of Birth`=="2016"), ]
 WMNH_PLOT <-ggplot(WMNH2016N,aes(x=Count,y=Rank, label = `Child's First Name`))
 WMNH_PLOT + geom_point() + geom_text(data=subset(WMNH2016N, Rank<2))+ggtitle("Male Baby name ranking in White,non-Hispanic 2016")+theme(plot.title = element_text(hjust = 0.5))
 ```
-##This is the scatter plot showing the number of children with a name against the rank in popularity of that name for male, white non-hispanic children born in 2016.With the name on the right bottom side the first rank name "Joseph" that largest amount of children are named with. As the children count decreases, the rank of the name increases(less popular).
+This is the scatter plot showing the number of children with a name against the rank in popularity of that name for male, white non-hispanic children born in 2016.With the name on the right bottom side the first rank name "Joseph" that largest amount of children are named with. As the children count decreases, the rank of the name increases(less popular).
 
 
 
